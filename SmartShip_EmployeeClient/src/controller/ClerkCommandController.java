@@ -240,7 +240,7 @@ public class ClerkCommandController {
     public Map<String, String> makePaymentAndReturnReceipt(int invoiceId, double amount, String paymentMethod) {
         try {
             // Connect to server
-            Socket socket = new Socket("localhost", 8000);
+            Socket socket = new Socket("localhost", 5000);
             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
             ObjectInputStream in = new ObjectInputStream(socket.getInputStream());
             
@@ -472,6 +472,34 @@ public class ClerkCommandController {
         return new HashMap<>(); // Return empty map instead of null
     }
 
+    /**
+     * Get all orders with customer names included
+     */
+    @SuppressWarnings("unchecked")
+    public List<Map<String, String>> getAllOrdersWithCustomerNames() {
+        try (Socket socket = new Socket(SERVER_HOST, SERVER_PORT);
+             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+            
+            out.writeObject("GET_ALL_ORDERS_WITH_CUSTOMER_NAMES");
+            out.flush();
+            
+            Object response = in.readObject();
+            if (response instanceof List) {
+                List<Map<String, String>> result = (List<Map<String, String>>) response;
+                System.out.println("Retrieved " + result.size() + " shipments with customer names");
+                return result;
+            } else {
+                System.out.println("Unexpected response type: " + (response != null ? response.getClass() : "null"));
+            }
+        } catch (Exception e) {
+            System.err.println("Error in getAllOrdersWithCustomerNames: " + e.getMessage());
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error retrieving shipments: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return new ArrayList<>(); // Return empty list instead of null
+    }
     //END OF NEW ADDITIONS
   //#########################################################################################################################################################################################################################################################
 

@@ -298,7 +298,6 @@ public class Commands {
 	}
 
 	/**
-	 * UPDATE SHIPMENT ASSIGNMENT Command Updates the driver, vehicle, and route for
 	 * a specific shipment Reads: trackingNumber, driver, vehicle, route Returns:
 	 * boolean (success/failure)
 	 */
@@ -370,6 +369,16 @@ public class Commands {
 		public Object execute(ObjectInputStream in) throws Exception {
 			return DatabaseHelper.getShipmentAssignments();
 		}
+	}
+	
+	/**
+	 * Returns all shipments with customer username included
+	 */
+	public static class GetAllOrdersWithCustomerNamesCommand implements Command {
+	    @Override
+	    public Object execute(ObjectInputStream in) throws Exception {
+	        return DatabaseHelper.getAllOrdersWithCustomerNames();
+	    }
 	}
 	// END OF ADDITIONS
 //##########################################################################################################################################################################################################################################################

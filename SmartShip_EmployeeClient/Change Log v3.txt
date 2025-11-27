@@ -1,0 +1,23 @@
+Change Log v3
+
+Added a new method to DatabaseHelper: getAllOrdersWithCustomerNames();
+
+Added a new commamd to Command:  GetAllOrdersWithCustomerNamesCommand();
+
+Registered the new command in Command Registry: commands.put("GET_ALL_ORDERS_WITH_CUSTOMER_NAMES", new GetAllOrdersWithCustomerNamesCommand());
+
+Added new method to ClerkCommandHelper: getAllOrdersWithCustomerNames();
+
+Replaced the old processShipReqPanel() within ClerkFrame to allow the customer's paid status to reflect in the clerk's interface
+
+Added a new method to ClerkFrame:  viewInvoiceForShipment(String trackingNumber); -- very important in allowing the clerk to view the customer's invoices 
+
+Replaced the assignPackagesPanel() method in the ClerkFrame.
+
+
+NOTES:
+
+1. The updates now fix a issue i was having where the customer paid status was not being refelected in the handle payments section. 
+2. Additionally, a edit has been made where if the user has paid an invoice, the clerk will not be able to edit that specific row. (security feature ig)
+3. The "Process Shipment Requests" and "Assign Packages" tab support hot reloading when a combobox is selected. (automatic refresh)
+	However, for the "Handle Payments" the refresh tab has to be pressed to show the most up-to-date information

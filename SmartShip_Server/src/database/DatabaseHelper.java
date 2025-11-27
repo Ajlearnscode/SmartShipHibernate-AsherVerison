@@ -1155,6 +1155,60 @@ public class DatabaseHelper {
         return assignments;
     }
     
+    
+
+    /**
+     * Returns shipments with customer username included
+     */
+    public static List<Map<String, String>> getAllOrdersWithCustomerNames() {
+        String sql = "SELECT s.shipment_id, s.tracking_number, s.recipient_info, s.weight, " +
+                     "s.package_type, s.zone, s.status, s.cost, s.payment_status, s.payment_method, " +
+                     "s.sender_info, s.created_at, u.username as customer_name " +
+                     "FROM shipments s " +
+                     "JOIN users u ON s.user_id = u.user_id " +
+                     "ORDER BY s.created_at DESC";
+
+        List<Map<String, String>> orders = new ArrayList<>();
+
+        try (Connection conn = getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                Map<String, String> order = new HashMap<>();
+                order.put("shipmentId", String.valueOf(rs.getInt("shipment_id")));
+                order.put("trackingNumber", rs.getString("tracking_number"));
+                order.put("recipientInfo", rs.getString("recipient_info"));
+                order.put("weight", String.valueOf(rs.getDouble("weight")));
+                order.put("packageType", rs.getString("package_type"));
+                order.put("zone", String.valueOf(rs.getInt("zone")));
+                order.put("status", rs.getString("status"));
+                order.put("cost", String.format("%.2f", rs.getDouble("cost")));
+                order.put("paymentStatus", rs.getString("payment_status"));
+                
+                String paymentMethod = rs.getString("payment_method");
+                order.put("paymentMethod", paymentMethod != null ? paymentMethod : "N/A");
+                
+                order.put("senderInfo", rs.getString("sender_info"));
+                order.put("customerName", rs.getString("customer_name"));
+                
+                Timestamp timestamp = rs.getTimestamp("created_at");
+                if (timestamp != null) {
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                    order.put("date", sdf.format(new java.util.Date(timestamp.getTime())));
+                }
+                
+                orders.add(order);
+            }
+
+        } catch (SQLException e) {
+            System.err.println("Error in getAllOrdersWithCustomerNames: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return orders;
+    }
+    
 
  //END OF NEW ADDITION - Asher Maxwell
     //#######################################################################################################################################################################################################################################################

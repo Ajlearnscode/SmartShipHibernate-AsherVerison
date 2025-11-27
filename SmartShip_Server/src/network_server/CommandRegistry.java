@@ -37,6 +37,7 @@ public class CommandRegistry {
         commands.put("ASSIGN_SHIPMENT_FULL", new AssignShipmentFullCommand()); //Asher
         commands.put("GET_SHIPMENT_ASSIGNMENTS", new GetShipmentAssignmentsCommand()); //Asher
         commands.put("GET_ALL_ORDERS", new GetAllOrdersCommand());//Asher
+        commands.put("GET_ALL_ORDERS_WITH_CUSTOMER_NAMES", new GetAllOrdersWithCustomerNamesCommand()); //Asher
     }
     
     /**
