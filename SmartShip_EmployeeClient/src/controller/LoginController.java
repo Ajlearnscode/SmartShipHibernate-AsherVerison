@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 
 public class LoginController {
     private static final String SERVER_HOST = "localhost";
-    private static final int SERVER_PORT = 8000;
+    private static final int SERVER_PORT = 5000;
     
     /**
      * Authenticate employee (Clerk, Manager, or Driver)

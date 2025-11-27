@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
  */
 public class CustomerCommandController {
     private static final String SERVER_HOST = "localhost";
-    private static final int SERVER_PORT = 8000;
+    private static final int SERVER_PORT = 5000;
     
     /**
      * Get customer profile information

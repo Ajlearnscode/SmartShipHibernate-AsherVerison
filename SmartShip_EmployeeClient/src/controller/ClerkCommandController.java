@@ -3,6 +3,12 @@ package controller;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +16,7 @@ import javax.swing.JOptionPane;
 
 public class ClerkCommandController {
 	private static final String SERVER_HOST = "localhost";
-    private static final int SERVER_PORT = 8000;
+    private static final int SERVER_PORT = 5000;
     
     /**
      * Get customer profile information
@@ -308,7 +314,166 @@ public class ClerkCommandController {
         return false;
     }
     
+    
+    //WE WANT SPECIFIC CUSTOMER SHIPMENTS
+    @SuppressWarnings("unchecked")
+    public List<Map<String, String>> getCustomerShipments(int userId) {
+        try (Socket socket = new Socket(SERVER_HOST, SERVER_PORT);
+             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+            
+            out.writeObject("GET_CUSTOMER_ORDERS");
+            out.flush();
+            
+            out.writeObject(userId);
+            out.flush();
+            
+            Object response = in.readObject();
+            if (response instanceof List) {
+                return (List<Map<String, String>>) response;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error retrieving shipments: " + e.getMessage(), 
+                "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return null;
+    }
    
+
+   
+    
+
+//#########################################################################################################################################################################################################################################################
+  //NEW ADDITIONS - November 26, 2025 (Asher Maxwell)
+    
+    public boolean updateShipmentAssignment(String trackingNumber, String driver, String vehicle, String route) {
+        try (Socket socket = new Socket(SERVER_HOST, SERVER_PORT);
+             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+            
+            out.writeObject("UPDATE_SHIPMENT_ASSIGNMENT"); // Needs to be registered
+            out.flush();
+            out.writeObject(trackingNumber);
+            out.writeObject(driver);
+            out.writeObject(vehicle);
+            out.writeObject(route);
+            out.flush();
+            
+            Object response = in.readObject();
+            return response instanceof Boolean && (Boolean) response;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Get available drivers from database
+     */
+    @SuppressWarnings("unchecked")
+    public List<Map<String, String>> getAvailableDrivers() {
+        try (Socket socket = new Socket(SERVER_HOST, SERVER_PORT);
+             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+            
+            out.writeObject("GET_AVAILABLE_DRIVERS"); //command in the Commands and Command Registry
+            out.flush();
+            
+            Object response = in.readObject();
+            if (response instanceof List) {
+                return (List<Map<String, String>>) response;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error retrieving drivers: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return new ArrayList<>(); // Return empty list instead of null
+    }
+
+    /**
+     * Get available vehicles from database
+     */
+    @SuppressWarnings("unchecked")
+    public List<Map<String, String>> getAvailableVehicles() {
+        try (Socket socket = new Socket(SERVER_HOST, SERVER_PORT);
+             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+            
+            out.writeObject("GET_AVAILABLE_VEHICLES"); //command in the Commands and Command Registry
+            out.flush();
+            
+            Object response = in.readObject();
+            if (response instanceof List) {
+                return (List<Map<String, String>>) response;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error retrieving vehicles: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return new ArrayList<>(); // Return empty list instead of null
+    }
+
+    /**
+     * Assign shipment to driver, vehicle, and route
+     */
+    public boolean assignShipment(String trackingNumber, Integer driverId, 
+                                  Integer vehicleId, String route) {
+        try (Socket socket = new Socket(SERVER_HOST, SERVER_PORT);
+             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+            
+            out.writeObject("ASSIGN_SHIPMENT_FULL"); //command in the Commands and Command Registry
+            out.flush();
+            out.writeObject(trackingNumber);
+            out.flush();
+            out.writeObject(driverId);
+            out.flush();
+            out.writeObject(vehicleId);
+            out.flush();
+            out.writeObject(route);
+            out.flush();
+            
+            Object response = in.readObject();
+            if (response instanceof Boolean) {
+                return (Boolean) response;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error assigning shipment: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return false;
+    }
+
+    /**
+     * Get shipment assignments
+     */
+    @SuppressWarnings("unchecked")
+    public Map<String, Map<String, String>> getShipmentAssignments() {
+        try (Socket socket = new Socket(SERVER_HOST, SERVER_PORT);
+             ObjectOutputStream out = new ObjectOutputStream(socket.getOutputStream());
+             ObjectInputStream in = new ObjectInputStream(socket.getInputStream())) {
+            
+            out.writeObject("GET_SHIPMENT_ASSIGNMENTS"); //command in the Commands and Command Registry
+            out.flush();
+            
+            Object response = in.readObject();
+            if (response instanceof Map) {
+                return (Map<String, Map<String, String>>) response;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error retrieving assignments: " + e.getMessage(),
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        return new HashMap<>(); // Return empty map instead of null
+    }
+
+    //END OF NEW ADDITIONS
+  //#########################################################################################################################################################################################################################################################
 
 
 }

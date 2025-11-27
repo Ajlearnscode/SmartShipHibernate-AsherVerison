@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 
 public class SignUpController {
     private static final String SERVER_HOST = "localhost";
-    private static final int SERVER_PORT = 8000; //  server runs on port 5000
+    private static final int SERVER_PORT = 5000; //  server runs on port 5000
     
     public boolean register(String username, String password, String email, String phone, String address, String role) {
         // Validation

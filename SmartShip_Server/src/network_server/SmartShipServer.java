@@ -12,8 +12,8 @@ public class SmartShipServer {
     public static void main(String[] args) {
         // Open a server socket on port 8000
         // try-with-resources automatically closes the socket when we're done
-        try (ServerSocket serverSocket = new ServerSocket(8000)) {
-            System.out.println("SmartShip Server started on port 8000...");
+        try (ServerSocket serverSocket = new ServerSocket(5000)) {
+            System.out.println("SmartShip Server started on port 5000...");
             System.out.println("Waiting for clients...");
 
             // Keep the server running forever

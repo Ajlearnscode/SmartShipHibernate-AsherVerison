@@ -7,7 +7,7 @@ import javax.swing.JOptionPane;
 
 public class SignUpController {
     private static final String SERVER_HOST = "localhost";
-    private static final int SERVER_PORT = 8000;
+    private static final int SERVER_PORT = 5000;
     
     /**
      * Register new employee (Clerk, Manager, or Driver)
